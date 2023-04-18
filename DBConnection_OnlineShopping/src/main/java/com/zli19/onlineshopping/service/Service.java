@@ -155,7 +155,7 @@ public class Service {
 
     private static void addItems() {          
         while(true){
-            System.out.println("\t--Add to Chart--");
+            System.out.println("\t--Add to Cart--");
             System.out.println("Enter productID and amount to add to your chart Or \"exit\" to leave.");
             String productID = Util.input("productID: ").strip();
             if("exit".equalsIgnoreCase(productID)){
@@ -192,12 +192,12 @@ public class Service {
                 break;
             }
             
-            addToChart(product, amount);                     
+            addToCart(product, amount);                     
         }
     }
 
     private static void checkOut () {
-        if(!isChartAvailable()){
+        if(!isCartAvailable()){
             System.out.println("Please modify your chart.");
         }else{
             System.out.println("\t--Checkout--");
@@ -307,10 +307,10 @@ public class Service {
         }        
     }
 
-    public static void showChart() {             
+    public static void showCart() {             
         boolean flag = true;
         while(flag){
-            if(Cart.productsInChart.isEmpty()){
+            if(Cart.productsInCart.isEmpty()){
                 System.out.println("Your chart is now empty.");
                 flag = false;
             }else{
@@ -324,16 +324,16 @@ public class Service {
                                           >""").strip().toLowerCase();
                 switch (input) {
                     case "1","checkout" -> checkOut();
-                    case "2","modify" -> modifyChart();
-                    case "3","clear" -> clearChart();
+                    case "2","modify" -> modifyCart();
+                    case "3","clear" -> clearCart();
                     case "4","exit" -> flag = false;
                 }
             }
         }
     }
 
-    private static void addToChart(Product product, int amount) {       
-        Cart.productsInChart.put(product, Cart.productsInChart.getOrDefault(product, 0)+amount);
+    private static void addToCart(Product product, int amount) {       
+        Cart.productsInCart.put(product, Cart.productsInCart.getOrDefault(product, 0)+amount);
         Cart.save();
         System.out.println("Successfully add "
                 + amount + (amount == 1 ? " unit of " : " units of ") 
@@ -341,13 +341,13 @@ public class Service {
                 + " to your chart.");
     }
 
-    private static void modifyChart() {
+    private static void modifyCart() {
         System.out.println("Choose the product in your chart you want to edit.");
         int amountbefore = -1;
         Product product = null;
         while(amountbefore == -1){
             String productID = Util.input("productID: ").strip();
-            for (Map.Entry<Product, Integer> entry : Cart.productsInChart.entrySet()) {
+            for (Map.Entry<Product, Integer> entry : Cart.productsInCart.entrySet()) {
                 if(entry.getKey().getProductID().equals(productID)){
                     product = entry.getKey();
                     amountbefore = entry.getValue();
@@ -374,12 +374,12 @@ public class Service {
         }
         
         if(amountafter == 0){
-            Cart.productsInChart.remove(product);
+            Cart.productsInCart.remove(product);
             System.out.println("Successfully deleted "
                     + product.getProductName()
                     + " from your chart.");
         }else{
-            Cart.productsInChart.replace(product, amountafter);  
+            Cart.productsInCart.replace(product, amountafter);  
             System.out.println("Successfully changed "
                     + product.getProductName()
                     + " from " + amountbefore
@@ -389,7 +389,7 @@ public class Service {
         Cart.save();
     }
 
-    private static void clearChart() {
+    private static void clearCart() {
         Cart.clear();
         Cart.save();
     }
@@ -413,7 +413,7 @@ public class Service {
         Transaction.begin();
         OrderProductDAO orderProductDAO = new OrderProductDAO();
         ProductDAO productDAO = new ProductDAO();
-        for(Map.Entry<Product, Integer> entry : Cart.productsInChart.entrySet()){
+        for(Map.Entry<Product, Integer> entry : Cart.productsInCart.entrySet()){
             orderProductDAO
                 .insert(new OrderProduct(order.getOrderID(), entry.getKey().getProductID(), entry.getValue()));
             if(isPaid){
@@ -427,10 +427,10 @@ public class Service {
         Transaction.end();
     }
 
-    private static boolean isChartAvailable() {
+    private static boolean isCartAvailable() {
         ProductDAO productDAO = new ProductDAO();
         boolean flag = true;
-        for(Map.Entry<Product, Integer> entry : Cart.productsInChart.entrySet()){
+        for(Map.Entry<Product, Integer> entry : Cart.productsInCart.entrySet()){
             Integer availableForSale = productDAO.queryBy("productID",entry.getKey().getProductID())
                     .get(0).getAvailableForSale();
             if(entry.getValue() > availableForSale){

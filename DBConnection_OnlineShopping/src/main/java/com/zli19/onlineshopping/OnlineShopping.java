@@ -36,7 +36,7 @@ public class OnlineShopping {
                                                    1.Browse or Search
                                                    2.Check your orders
                                                    3.Sign Out
-                                                   4.Chart
+                                                   4.Cart
                                                    >""")
                                 .strip();                       
                         switch (answer) {
@@ -46,7 +46,7 @@ public class OnlineShopping {
                                 Service.logout();
                                 flag = false;
                             }
-                            case "4" -> Service.showChart();
+                            case "4" -> Service.showCart();
                         }
                     }
                     break;

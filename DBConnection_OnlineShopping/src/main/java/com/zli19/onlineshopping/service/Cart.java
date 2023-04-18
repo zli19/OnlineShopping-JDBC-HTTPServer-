@@ -19,7 +19,7 @@ import java.util.Map;
  * @author zhiku
  */
 public abstract class Cart{    
-    public static final HashMap<Product, Integer> productsInChart = new HashMap<>();
+    public static final HashMap<Product, Integer> productsInCart = new HashMap<>();
     public static final File FILE = new File("chart.txt");
     
     static {
@@ -28,7 +28,7 @@ public abstract class Cart{
                 try(FileInputStream fis = new FileInputStream(FILE);
                         ObjectInputStream is = new ObjectInputStream(fis);){
                     while(true){
-                        productsInChart.put((Product)is.readObject(),(Integer)is.readObject());
+                        productsInCart.put((Product)is.readObject(),(Integer)is.readObject());
                     }
                 }catch(EOFException ex){                   
                 }catch(IOException | ClassNotFoundException ex){
@@ -43,7 +43,7 @@ public abstract class Cart{
 
     static double getTotal() {
         double sum = 0;
-        for(Map.Entry<Product, Integer> entry : Cart.productsInChart.entrySet()){
+        for(Map.Entry<Product, Integer> entry : Cart.productsInCart.entrySet()){
             sum += entry.getKey().getPricePerUnit().doubleValue()*entry.getValue();        
         }
         return sum;
@@ -52,7 +52,7 @@ public abstract class Cart{
     public static void save(){
         try(FileOutputStream fos = new FileOutputStream(FILE);
             ObjectOutputStream os = new ObjectOutputStream(fos);){
-            for(Map.Entry<Product, Integer> entry : Cart.productsInChart.entrySet()){
+            for(Map.Entry<Product, Integer> entry : Cart.productsInCart.entrySet()){
                 os.writeObject(entry.getKey());
                 os.writeObject(entry.getValue());
                 os.flush();
@@ -63,14 +63,14 @@ public abstract class Cart{
     }
     
     public static void clear(){
-        productsInChart.clear();
+        productsInCart.clear();
     }
     
     public static void show(){
-        System.out.println("\t--Chart--");
+        System.out.println("\t--Cart--");
         System.out.println("\tProductID\tName\t\tPrice\t\tAmount");
         StringBuilder sb = new StringBuilder();
-        for(Map.Entry<Product, Integer> entry : productsInChart.entrySet()){          
+        for(Map.Entry<Product, Integer> entry : productsInCart.entrySet()){          
             sb.append("\t")
             .append(entry.getKey().getProductID())
             .append("\t\t")
