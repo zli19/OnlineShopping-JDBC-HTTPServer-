@@ -1,2 +1,2 @@
 # MyJavaRepos
- Contains the Java projects I worked on.
+ Contains my Java projects.
