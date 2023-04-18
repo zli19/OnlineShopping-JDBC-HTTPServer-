@@ -18,7 +18,7 @@ public class Configuration {
                         .getContextClassLoader()
                         .getResource("")
                         .getPath();
-        System.out.println(rootPath);
+//        System.out.println(rootPath);
         String servletConfigPath = rootPath + "servlet.properties";             
         try {
             SERVLET_CONFIG.load(new FileInputStream(servletConfigPath));
